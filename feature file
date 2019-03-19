@@ -1,0 +1,193 @@
+#Author: dkhomikh@sensysnetworks.com
+##Keywords Summary : SNAPS features automation
+## (Comments)
+
+
+Feature: SNAPS demo automation
+
+	Background:
+		* Browser "Chrome" is up and running
+		* Go to "http://192.168.2.190/snaps/login.html" page
+		* Enter username "sensys" and password "sen&sys" on page 
+	
+
+	@LoginLogoutOnly
+	Scenario Outline: Login in/out as different users
+	 		* Browser "Chrome" is up and running
+			* Go to "http://192.168.3.156/snaps/login.html" page
+			* Enter username <name> and password <password> on page
+			* Logout
+		Examples:
+    		| name  |password |
+    		|"sensys"|"sen&sys"|
+    		
+  	@ExpandingParentsOnly
+	Scenario: Expanding Parents
+		* Expand Parent Features 3
+		* Quit Browser
+		
+  @AddAccessPoints
+  		Scenario Outline: Add Access Point
+		* Expand Configuration Features "access points"
+		* Add AP with <apname> name and description <apdescr> and IP <apip> and port1 <apport1> and port2 <apport2>
+		* Quit Browser
+		Examples:
+    		| apname | apdescr | apip | apport1 | apport2 |
+    		|"APCC 3294 - Sensmetric"|"Montrose Pkwy and Towne Rd"|"192.168.3.18"|20297|20298|
+    		|"APEG-458  VDOT - New Kent (I-64 E)"|"Montrose Pkwy and Towne Rd"|"192.168.3.18"|20996|20996|
+    		|"xerox-ddot_apeg4945_pb2r1"|"xerox-ddot_apeg4945_pb2r1"|"192.168.3.18"|20974|20975|
+    		|"xerox-ddot_apeg429_pb1r2"|"xerox-ddot_apeg429_pb1r2"|"192.168.3.18"|20967|20968|
+  		
+
+    @AddAccessPointsDeleteGroups
+  		Scenario: Delete Access Point Group
+		* Expand Configuration Features "access point groups"
+		* Delete All AP Groups "AP_G" by name
+	
+    				
+    @AddAccessPointsGroups
+  		Scenario Outline: Add Access Point Group
+		* Expand Configuration Features "access point groups"
+		* Delete All AP Groups "AP_G" by name
+		* Add AP Group <apname>
+		* Quit Browser
+		Examples:
+    		| apname |
+    		|"AP_G_A"|
+    		|"AP_G@A"|
+    		|"AP_G/B"|
+    		|"AP_G\B"|
+    		|"AP_G*C"|
+    		
+   @AddSegmentsOnly
+  		Scenario Outline: Add Segment
+		* Expand Configuration Features "congestion segments"
+		* Segments Add <name>
+		* Quit Browser
+		Examples:
+    		| name |
+    		| "SMG?"|
+    		
+	 @AlertsDeleteOnly
+	 Scenario: Delete Alerts 
+		  * Delete All Alerts "AL_" by name
+			* Quit Browser
+		
+  	 @AlertsOnly
+   Scenario Outline: Add Alerts
+			* Add Alert <aname> Standard Configuartion <Yes> Yes/No <repeat> How Many <devices> Devices <select all>
+			* Quit Browser
+			Examples:
+		    		| Yes | aname | repeat | devices | select all|
+		    		|"No"|"AL_No_Devices/"|3|""|""|
+		    		|"Yes"|"AL_No_Devices"|2|""|""|
+		    				    		
+	@AlertsConfigurationOnly
+  Scenario Outline: Configuration Alerts
+			* Add Alert <aname> Standard Configuartion <Yes> Yes/No <repeat> How Many <devices> Devices <select all>
+			* Quit Browser
+			Examples:
+		    		| Yes | aname | repeat | devices | select all |
+		    		|"Yes"| "AL_All_"|1| "Sensor Zones;Intersections;Congestion Segments"|"Select all"|
+		
+		
+  @AddUserOnly
+  	Scenario: Add User
+		* Expand Configuration Features "users and user groups"
+		* Add User Group "GRP_A"
+		* Expand Configuration Features "users and user groups"
+		* Add User "U" name "dkhomikh@sensysnetworks.com" email
+		* Expand Configuration Features "users and user groups"
+		* Change user group
+		* Add Access Point Group to User
+		* Logout
+		* Enter username "" and password "" on page 
+		* Quit Browser
+    		
+    @AddSegmentsOnly
+  		Scenario Outline: Add Segment
+		* Expand Configuration Features "congestion segments"
+		* Segments Add <name>
+		* Quit Browser
+		Examples:
+    		| name |
+    		| "SMG"|
+    		
+    @AddIntersectionsOnly
+  		Scenario Outline: Add Intersection
+		* Expand Configuration Features "intersections"
+		* Delete All Intersections "IS" by name
+		* Add Intersection name <iname> and intersection <intrsections> delete after <yesno>
+		* Quit Browser
+		Examples:
+    		| iname | intrsections | yesno |
+    		| "IS_A" | "Montrose Pkwy & Towne Rd @ APCC 3294 - Sensmetrics"|"yes"|
+    		| "IS_B" | "Montrose Pkwy & Towne Rd @ APCC 3294 - Sensmetrics"|"no"|
+    		
+
+ @AddSensorZoneGroupOnly
+  		Scenario Outline: Add Sensor Zone group
+		* Expand Configuration Features "sensor zone groups"
+		* Delete All Sensor Group Zones "SZG" by name
+		* Add Sensor Zone group <grpname> name 
+		* Quit Browser
+		Examples:
+    		| grpname |
+    		|"SZG_A"|
+    		|"SZG_B"|
+    		
+    @AddRealTimeDataServicesOnly
+  		Scenario Outline: Add Real Time Data Services
+		* Expand Configuration Features "real time data services"
+		* 	Delete Real Time Data Service <srvsname> by name
+		* Add Real Time Data Service <srvsname> name 
+		* Quit Browser
+		Examples:
+    		| srvsname |
+    		|"XML Events Service"|
+    		|"XML Statistics Service"|
+    		|"Push Service"|
+    		|"High Occupancy Alert Service"|
+    		|"XML Diagnostics Service"|
+    		|"TMDD Web Services"|
+    		|"Poll Service"|
+    		|"Event Proxy Service"|
+    		
+    @AddParkingLotOnly
+  		Scenario Outline: Add Parking lots 
+		* Expand Configuration Features "parking lots"
+		* Add Parking lot <plname> name
+		* Quit Browser
+		Examples:
+    		| plname |
+    		|"pl_"|
+    		
+    @AddReportsOnly
+  		Scenario Outline: Create Reports
+    * Expand Reports <rname> name
+		* Create Report <rname> name
+		* Run Report <rname> name
+		* Quit Browser
+		Examples:
+    		| rname |
+    		##|"corridor pcd reports"|
+    		##|"performance reports"|
+    		##|"turn count reports"|
+    		|"parking reports"|
+    		##|"device diagnostics"|
+    		|"traffic statistics"|
+    		|"per vehicle statistics"|
+    		
+    @DeleteReportsOnly
+  		Scenario Outline: Delete All Reports
+		* Delete All Reports <rname> name
+		* Quit Browser
+		Examples:
+    		| rname |
+    		|"corridor pcd reports"|
+    		|"performance reports"|
+    		|"turn count reports"|
+    		|"parking reports"|
+    		|"device diagnostics"|
+    		|"traffic statistics"|
+    		|"per vehicle statistics"|
