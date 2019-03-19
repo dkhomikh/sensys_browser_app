@@ -1,0 +1,1558 @@
+/*
+* Copyright(c) 2016 Mastek Ltd. All rights reserved.
+* 
+*	SwiftLite is distributed in the hope that it will be useful.
+*
+*	This file is part of SwiftLite Framework: Licensed under the Apache License, 
+*	Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+*	You may obtain a copy of the License at
+* 
+*	http://www.apache.org/licenses/LICENSE-2.0
+* 
+*	Unless required by applicable law or agreed to in writing, software
+*	distributed under the License is distributed on an "AS IS" BASIS,
+*	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*	See the License for the specific language governing permissions and 
+*	limitations under the License.
+*/
+
+package com.sensysnetworks.stepDefinitions;
+
+import org.apache.http.auth.AUTH;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+
+import com.sensysnetworks.cucumberTests.Automation;
+
+import org.openqa.selenium.By.ByClassName;
+import org.openqa.selenium.By.ById;
+import org.openqa.selenium.By.ByLinkText;
+import org.openqa.selenium.By.ByName;
+import org.openqa.selenium.JavascriptExecutor;
+
+import java.awt.AWTException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import cucumber.api.Scenario;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+public class StepDefinitions {
+	public String testID = "";
+	public String testDescription = "";
+	public String groupName = "";
+	static WebDriver driver;
+	public String getSearch0 = "";
+	public String getSearch1 = "";
+	public String getSearch2 = "";
+	public String getSearch3 = "";
+	public String getSearch4 = "";
+	public String getSearch5 = "";
+	public String getSearch6 = "";
+	public String getSearch7 = "";
+	public String getSearch8 = "";
+
+	List<String> allertName = new ArrayList<String>();
+
+	TestData td = new TestData();
+
+	// String grpNameGlobal = "defaultGroupName";
+	// String usrNameGlobal = "defaultUserName";
+	// String usrPasswordGlobal = "99999";
+	// String segNameGlobal = "defaultSegName";
+
+	@Before
+	public void before(Scenario scenario) {
+
+		// updateTestDetails(scenario);
+
+	}
+
+	// @Given("(.*)$")
+	/*
+	 * public void user_on_webpage(String transaction) throws Throwable { String
+	 * transactionname = ""; // Write code here that turns the phrase above into
+	 * concrete actions if (transaction.contains("<") && transaction.contains(">"))
+	 * transactionname = transaction.substring( transaction.indexOf("<") + 1,
+	 * transaction.indexOf(">"));
+	 * 
+	 * if (!StringUtils.isBlank(transactionname))
+	 * TransactionMapping.TransactionInputData(transactionname, this.testID,
+	 * this.testDescription, this.groupName); }
+	 */
+
+	@Given("^I want to say Hello$")
+	public static void helloSensys() {
+		System.out.println("hello Sensys!");
+
+	}
+
+	@Given("^Browser \"([^\"]*)\" is up and running$")
+	public void BrowserIsRunningSNAPS(String browserName) {
+
+		try {
+			driver = Automation.setUp(browserName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		System.out.println("Browser " + browserName + " is running...");
+
+	}
+
+	@And("^Go to \"([^\"]*)\" page$")
+	public void Goto(String pageAddress) throws InterruptedException {
+		Automation.goToPage(pageAddress, 2000);
+		try {
+			Thread.sleep(700);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@And("^Add Sensor Zone group \"([^\"]*)\" name$")
+	public void SensorZonegroupAdd(String name) throws InterruptedException {
+
+		String name1 = td.setSensorZoneGroupNameGlobal(name + "_" + System.currentTimeMillis());
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("addSensorZoneBtn", 2000));
+
+		Automation.getElementByExpath("//*[@id=\"addSensorZoneBtn\"]", 2000).click();
+		Automation.getElementByExpath("//*[@id=\"groupName\"]", 2000).sendKeys(name1);
+
+		// select first access point from left column
+		Automation.getElementByExpath("//*[@id=\"apSzTable\"]/tbody/tr[2]/td[1]/div/div", 2000).click();
+		Automation.getElementByExpath("//*[@id=\"selectAllSzs\"]", 2000).click();
+
+		Automation.getElementByExpath("//*[@id=\"szSubmit\"]", 2000).click();
+		;
+
+		Automation.getElementByLinkText(name1, 2000).click();
+
+		Automation.getElementByExpath("//*[@id=\"editSzgCancelbtn\"]", 2000).click();
+		;
+
+	}
+
+	@And("^Segments Add \"([^\"]*)\"$")
+	public void SegmentsAdd(String nameSeg) throws AWTException, InterruptedException {
+
+		td.setSegNameGlobal(nameSeg + "_" + System.currentTimeMillis());
+
+		Automation.getElementByExpath("//*[@id=\"addConSegBtn\"]", 2000).click();
+
+		Automation.getElementByExpath("//*[@id=\"arteryName\"]", 2000).sendKeys(td.getSegNameGlobal());
+
+		// selecting lanes
+		Automation
+				.getElementByExpath(
+						"//*[@id=\"arterialCommandForm\"]/div[1]/div[2]/table[1]/tbody/tr[2]/td[3]/div/div[1]", 2000)
+				.click();
+		Automation
+				.getElementByExpath(
+						"//*[@id=\"arterialCommandForm\"]/div[1]/div[2]/table[1]/tbody/tr[2]/td[3]/div/div[2]", 2000)
+				.click();
+		Automation
+				.getElementByExpath(
+						"//*[@id=\"arterialCommandForm\"]/div[1]/div[2]/table[1]/tbody/tr[2]/td[3]/div/div[3]", 2000)
+				.click();
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("editConSegSubmitBtn", 2000));
+
+		// picking points on the map
+		Automation.RobotMouseMove(639, 370, 1000);
+		Automation.RobotMouseMove(668, 482, 1000);
+
+		Automation.getElementByID("editConSegSubmitBtn", 2000).click();
+
+	}
+
+	@And("^Add Parking lot \"([^\"]*)\" name$")
+	public void ParkingLotAdd(String plname) throws Exception {
+
+		String rstring = "";
+		for (int i = 0; i < 2; i++) {
+			Random r = new Random();
+			char c = (char) (r.nextInt(26) + 'a');
+			rstring = rstring + String.valueOf(c);
+		}
+
+		td.setParkingLotGlobal(plname + rstring);
+
+		Automation.getElementByExpath("//*[@id=\"addParkingLot\"]", 2000).click();
+
+		Automation.getElementByExpath("//*[@id=\"lotName\"]", 2000).sendKeys(td.getParkingLotGlobal());
+		Automation.getElementByExpath("//*[@id=\"lotDescription\"]", 2000)
+				.sendKeys(td.getParkingLotGlobal() + "_descr");
+
+		Automation.getElementByExpath("//*[@id=\"sectionTable\"]/tbody/tr/td[1]/input[4]", 2000)
+				.sendKeys(td.getParkingLotGlobal() + "_section");
+		Automation.getElementByExpath("//*[@id=\"sectionTable\"]/tbody/tr/td[2]/textarea", 2000)
+				.sendKeys(td.getParkingLotGlobal() + "_section_descr");
+
+		Automation.dragAnddrop("//*[@id=\"szgTable\"]/li[1]", "//*[@id=\"sectionTable\"]/tbody/tr/td[4]/ul", 2000);
+
+		// Automation.RobotMouseGrab(986, 357, 2000);
+		// Automation.RobotMouseDrop(756, 357, 3000);
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("save", 2000));
+
+		Automation.getElementByID("save", 4000).click();
+
+		Automation.getElementByLinkText(td.getParkingLotGlobal(), 2000).click();
+		;
+
+		Automation.getElementByExpath("//*[@id=\"pageContent\"]/div[3]/a", 2000).click();// click Cancel button
+
+	}
+
+	@And("^Add Intersection name \"([^\"]*)\" and intersection \"([^\"]*)\" delete after \"([^\"]*)\"$")
+	public void IntersectionAdd(String name, String intersection, String yesno) throws InterruptedException {
+
+		String isname = td.setIntersectionNameGlobal(name + "_" + System.currentTimeMillis());
+		td.setIntersectioniGlobal(intersection);
+
+		Automation.getElementByExpath("//*[@id=\"addIntersectionBtn\"]", 2000).click();
+
+		Automation.getElementByExpath("//*[@id=\"intersectionName\"]", 2000).sendKeys(td.getIntersectionNameGlobal());
+		Automation.getElementByExpath("//*[@id=\"intersectionId\"]", 2000).sendKeys(td.getIntersectionGlobal());
+
+		Automation.getElementByExpath("//*[@id=\"intersectionId\"]", 2000).sendKeys(td.getIntersectionGlobal());
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("saveBtn", 2000));
+
+		Automation.getElementByID("saveBtn", 2000).click();
+
+		String yesbutton = "/html/body/div[3]/div[3]/div/button[1]/span";
+
+		if (yesno.equals("no"))
+			yesbutton = "/html/body/div[3]/div[3]/div/button[2]/span";
+
+		Automation.getElementByLinkText(isname, 2000).click();
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("deleteBtn", 2000));
+
+		Automation.getElementByID("deleteBtn", 4000).click();
+
+		Automation.getElementByExpath(yesbutton, 2000).click();
+
+		if (yesno.equals("no"))
+			Automation.getElementByID("cancelBtn", 2000).click();
+
+	}
+
+	@And("Add AP with \"([^\"]*)\" name and description \"([^\"]*)\" and IP \"([^\"]*)\" and port1 (\\d+) and port2 (\\d+)$")
+	public void AccessPointsAdd(String nameAP, String description, String IPAddress, long port1, long port2)
+			throws AWTException, InterruptedException {
+
+		td.setAPport1Global(port1);
+		td.setAPport2Global(port2);
+
+		if (nameAP.contains("XXYY"))
+			td.setAPNameGlobal(nameAP + "_" + System.currentTimeMillis());
+		else
+			td.setAPNameGlobal(nameAP);
+
+		List<WebElement> oINTER = Automation.getElementsByPartialLinkText(nameAP.substring(0, 21), 100);
+
+		int iSize = oINTER.size();
+
+		if (iSize > 0) {
+
+			return;
+		}
+
+		Automation.getElementByExpath("//*[@id=\"addApBtn\"]", 2000).click();
+
+		Automation.getElementByExpath("//*[@id=\"apName\"]", 2000).sendKeys(td.getAPNameGlobal());
+		Automation.getElementByExpath("//*[@id=\"description\"]", 2000).sendKeys(td.getAPNameGlobal());
+		Automation.getElementByExpath("//*[@id=\"ipAddress\"]", 2000).sendKeys(td.getAPipGlobal());
+
+		Automation.getElementByExpath("//*[@id=\"ui-id-4\"]", 2000).click();// port tab
+
+		Automation.getElementByExpath("//*[@id=\"port\"]", 200).clear();
+		Automation.getElementByExpath("//*[@id=\"port\"]", 2000).sendKeys(String.valueOf(td.getAPport1Global()));
+		Automation.getElementByExpath("//*[@id=\"httpPort\"]", 200).clear();
+		Automation.getElementByExpath("//*[@id=\"httpPort\"]", 2000).sendKeys(String.valueOf(td.getAPport2Global()));
+
+		Automation.getElementByID("addApSubmitBtn", 2000).click();
+
+	}
+
+	@Then("Enter username \"([^\"]*)\" and password \"([^\"]*)\" on page$")
+	public void Login(String userName, String password) throws InterruptedException, AWTException {
+		if (userName.equals(""))
+			userName = td.getUsrNameGlobal();
+		if (password.equals(""))
+			password = td.getUsrPasswordGlobal();
+		Automation.getElementByID("userName", 700).sendKeys(userName);
+		Automation.getElementByID("password", 700).sendKeys(password);
+		Automation.getElementByID("loginButton", 2000).click();
+		String SNAPSid = Automation.getElementByExpath("//*[@id=\"egg\"]", 2000).getText();
+		System.out.println("Snap build id=" + SNAPSid);
+	}
+
+	@Then("Logout$")
+	public void Logout() throws InterruptedException {
+		Automation.FindByTagNameAndAttributeIndexed("a", "title", "Logout", 0, 200).click();
+	}
+
+	@And("^Select All Devices$")
+	public void SelectAllDevices() throws InterruptedException {
+
+		// *[@id="sensorZonesTab"]/div/ul/li[1]/button
+		
+		List<WebElement> butSelectAll = driver
+				.findElements(By.xpath("//*[@id=\"sensorZonesTab\"]/div/ul/li[1]/button"));
+
+		int iSize = 1;
+		int count = 0;
+
+		do {
+			count++;
+			butSelectAll = driver
+					// .findElements(By.xpath("//*[@id=\"sensorZonesTab\"]/div/ul/li[" + count +
+					// "]/div[2]/label"));
+					.findElements(By.xpath("//*[@id=\"sensorZonesTab\"]/div/ul/li[" + count + "]/button"));
+			iSize = butSelectAll.size();
+		} while (iSize > 0);
+		// *[@id="sensorZonesTab"]/div/ul/li/div[3]/button
+		int ocount = count;
+
+		for (int i = 0; i < ocount; i++) {
+
+			if (driver.findElements(By.xpath("//*[@id=\"sensorZonesTab\"]/div/ul/li[" + count + "]/button")).size() > 0)
+
+			{
+
+				Automation.getElementByExpath("//*[@id=\"sensorZonesTab\"]/div/ul/li[" + count + "]/button", 2000)
+						.click();
+			}
+
+			count--;
+
+		}
+		int a = 0;
+		if (count == 0) {
+
+			// *[@id="sensorZonesTab"]/div/ul/li/div[3]/button
+
+			do {
+
+				count++;
+				butSelectAll = driver
+						.findElements(By.xpath("//*[@id=\"sensorZonesTab\"]/div/ul/li/div[" + count + "]/button"));
+				iSize = butSelectAll.size();
+				a++;
+			} while (iSize == 0 && a < 10);
+
+			Automation.getElementByExpath("//*[@id=\"sensorZonesTab\"]/div/ul/li/div[" + count + "]/button", 2000)
+					.click();
+
+		}
+
+		Thread.sleep(2000);
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				driver.findElement(By.id("save")));
+		Thread.sleep(2000);
+
+		for (int i = 1; i < 5; i++) {
+
+			Automation.getElementByExpath("//*[@id=\"sensorZoneTriggers\"]/tbody/tr[" + i + "]/td[1]/div/label", 2000)
+					.click();
+			// Select Speed Median, Lead / Trail, Volume, Occupancy
+
+		}
+
+		Automation.getElementByID("save", 2000).click(); // Save Sensor Zones
+
+	}
+
+	public void DevcesTabsSelect(String TabName, String allertName) throws InterruptedException {
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 200).click();
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon bullhorn", 1, 200).click();// alerts
+
+		Automation.getElementByLinkText(allertName, 2000).click();
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				driver.findElement(By.id("alertName")));
+		Thread.sleep(2000);
+
+		switch (TabName) {
+		case "Field Devices":
+			Automation.getElementByExpath("//*[@id=\"ui-id-1\"]", 2000).click();
+			break;
+		case "Sensor Zones":
+			Automation.getElementByExpath("//*[@id=\"ui-id-2\"]", 2000).click();
+			break;
+		case "Intersections":
+			Automation.getElementByExpath("//*[@id=\"ui-id-3\"]", 2000).click();
+			break;
+		case "Congestion Segments":
+			Automation.getElementByExpath("//*[@id=\"ui-id-4\"]", 2000).click();
+			break;
+		}
+
+	}
+
+	public void IntersectionsAdd() throws InterruptedException {
+
+		// *[@id="intersection3"]
+		List<WebElement> butSelectAll = Automation.getElementsByName("intersections", 2000);
+		int icSize = butSelectAll.size();
+
+		for (int i = 0; i < icSize; i++)
+			Automation.getElementByID(butSelectAll.get(i).getAttribute("id"), 2000).click();
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				driver.findElement(By.xpath("//*[@id=\"alertCommand\"]/div[2]/div[1]")));
+
+		Automation.getElementByExpath("//*[@id=\"intersectionTriggers\"]/tbody/tr[1]/td[1]/div/label/span", 2000)
+				.click(); // select at least one trigger
+
+		Automation.getElementByID("save", 2000).click(); // Save
+
+	}
+
+	@And("^Expand Parent Features (\\d+)$")
+	public void ExpandParentFeatures(int Looptimes) throws InterruptedException {
+
+		for (int i = 0; i < Looptimes; i++) {
+
+			Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 700).click();
+
+			Automation.FindByTagNameAndAttributeIndexed("div", "title", "Show Reports for Access Point Groups", 0, 700)
+					.click();
+
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon congseg", 0, 700).click();
+
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon gears", 0, 200).click();
+		}
+	}
+
+	@And("^Expand Reports \"([^\"]*)\" name$")
+	public void ExpandReports(String reportName) throws InterruptedException {
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(false);",
+				Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 700));
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 700).click();
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "title", "Show Reports for Access Point Groups", 0, 700)
+				.click();
+
+		Automation.getElementByExpath("//*[@id=\"showReports1\"]/div", 2000).click();
+
+		String reportID = "";
+
+		switch (reportName) {
+		case "traffic statistics":
+			reportID = "//*[@id=\"trafficStatReports1\"]/div";
+			break;
+		case "per vehicle statistics":
+			reportID = "//*[@id=\"perVehicleReports1\"]/div";
+			break;
+		case "device diagnostics":
+			reportID = "//*[@id=\"diagReports1\"]/div";
+			break;
+		case "parking reports":
+			reportID = "//*[@id=\"parkingReports1\"]/div";
+			break;
+		case "travrl time statistics":
+			reportID = "//*[@id=\"menutree\"]/ul/li/ul/li[1]/ul/li[1]/ul/li[5]/div[2]";
+			break;
+		case "turn count reports":
+			reportID = "//*[@id=\"turnCountReports1\"]/div";
+			break;
+		case "performance reports":
+			reportID = "//*[@id=\"performanceReports1\"]/div";
+			break;
+		case "corridor pcd reports":
+			reportID = "//*[@id=\"pcdReports1\"]/div";
+			break;
+		}
+
+		Automation.getElementByExpath(reportID, 2000).click();
+
+	}
+
+	@And("^Run Report \"([^\"]*)\" name$")
+	public void RunReport(String rname) throws InterruptedException {
+
+		ExpandReports(rname);
+
+		Automation.getElementByLinkText(td.getReportNameGlobal(), 2000).click();
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("submitButton", 2000));
+
+		Automation.getElementByID("submitButton", 5000).click();
+
+		String xpathIdPDF = "", xpathIdPNG = "";
+
+		switch (rname) {
+		case "traffic statistics":
+			xpathIdPDF = "//*[@id=\"pdfButton\"]";
+			xpathIdPNG = "//*[@id=\"pngButton\"]";
+			break;
+		case "per vehicle statistics":
+			break;
+		case "device diagnostics":
+			xpathIdPDF = "//*[@id=\"pdfButton\"]";
+			xpathIdPNG = "//*[@id=\"pngButton\"]";
+			break;
+		case "parking reports":
+			break;
+		case "travel time statistics":
+			break;
+		case "turn count reports":
+			xpathIdPDF = "//*[@id=\"pdfButton\"]";
+			xpathIdPNG = "//*[@id=\"pngButton\"]";
+			break;
+		case "performance reports":
+			xpathIdPDF = "//*[@id=\"moyDiv\"]/div[6]/button[1]";
+			xpathIdPNG = "//*[@id=\"moyDiv\"]/div[6]/button[2]";
+			break;
+		case "corridor pcd reports":
+			xpathIdPDF = "//*[@id=\"resultsContainer\"]/div[2]/button[1]";
+			// *[@id="resultsContainer"]/div[2]/button[1]
+			xpathIdPNG = "//*[@id=\"resultsContainer\"]/div[2]/button[2]";
+			break;
+		}
+
+		if (String.valueOf(xpathIdPDF) != "")
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+					Automation.getElementByExpath(xpathIdPDF, 5000));
+
+		if (String.valueOf(xpathIdPDF) != "")
+			Automation.getElementByExpath(xpathIdPDF, 5000).click();
+
+		if (String.valueOf(xpathIdPNG) != "")
+			Automation.getElementByExpath(xpathIdPNG, 2000).click();
+
+	}
+
+	@And("^Create Report \"([^\"]*)\" name$")
+	public void ReportCreate(String reportName) throws InterruptedException {
+
+		switch (reportName) {
+		case "traffic statistics":
+			ReportCreateGeneric("r_ts_");
+			break;
+		case "per vehicle statistics":
+			ReportCreateGeneric("r_pvs_");
+			break;
+		case "device diagnostics":
+			ReportCreateGeneric("r_dd_");
+			break;
+		case "parking reports":
+			ReportCreateGeneric("r_park_");
+			break;
+		case "travel time statistics":
+			break;
+		case "turn count reports":
+			ReportCreateGeneric("r_turnc_");
+			break;
+		case "performance reports":
+			ReportCreateGeneric("r_prf_");
+			break;
+		case "corridor pcd reports":
+			ReportCreateGeneric("r_pocd_");
+			break;
+		}
+
+	}
+
+	@And("^Delete All Reports \"([^\"]*)\" name$")
+	public void DeleteAllReports(String rname) throws InterruptedException {
+
+		ExpandReports(rname);
+
+		List<WebElement> oINTER = Automation.getElementsByPartialLinkText("r_", 100);
+
+		int iSize = oINTER.size();
+		if (iSize > 0) {
+
+			do {
+
+				oINTER.get(0).click();
+
+				Thread.sleep(2000);
+
+				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+						Automation.getElementByID("deleteButton", 2000));
+
+				Automation.getElementByID("deleteButton", 2000).click();
+
+				Automation.getElementByExpath("/html/body/div[4]/div[3]/div/button[1]/span", 4000).click();
+
+				oINTER = Automation.getElementsByPartialLinkText("r_", 100);
+
+				iSize = oINTER.size();
+
+			} while (iSize > 0);
+
+		}
+	}
+
+	public void ReportCreateGeneric(String report) throws InterruptedException {
+
+		String trname = "";
+
+		for (int i = 0; i < 3; i++) {
+			Random r = new Random();
+			char c = (char) (r.nextInt(26) + 'a');
+			trname = trname + String.valueOf(c);
+		}
+
+		td.setReportNameGlobal(report + trname);
+
+		Automation.getElementByExpath("//*[@id=\"newReportBtn2\"]", 2000).click();
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByExpath("//*[@id=\"saveButton\"]", 2000));
+
+		Automation.getElementByExpath("//*[@id=\"saveButton\"]", 4000).click();
+
+		Automation.getElementByExpath("//*[@id=\"criteriaName\"]", 2000).sendKeys(td.getReportNameGlobal());
+
+		Automation.getElementByExpath("//*[@id=\"okButton\"]", 2000).click();
+
+	}
+
+	@And("^Expand Configuration Features \"([^\"]*)\"$")
+	public void ExpandChildernFeatures(String configWhat) throws InterruptedException {
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 200).click();
+		Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon gears", 0, 200).click();// configurations
+
+		switch (configWhat) {
+
+		case "servers":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon host", 0, 200).click();
+			break;
+		case "access point groups":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon configapgroups", 0, 200).click();
+			break;
+		case "access points":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon aps", 0, 200).click();
+			break;
+		case "intersections":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon intersections", 0, 200).click();
+			break;
+		case "parking lots":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon parking", 0, 200).click();
+			break;
+		case "alerts":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon bullhorn", 0, 200).click();
+			break;
+		case "congestion segments":
+
+			// *[@id="menutree"]/ul/li/ul/li[5]/ul/li[7]/a/div
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon congseg", 1, 200).click();
+			break;
+		case "travel time segments":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon apgroups greyedOut", 0, 200)
+					.click();
+			break;
+
+		case "sensor zone groups":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon locationgroups", 0, 200).click();
+			break;
+
+		case "real time data services":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon dataServices", 0, 200).click();
+			break;
+		// //
+		case "users and user groups":
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon user", 0, 200).click();
+			break;
+
+		}
+
+	}
+
+	@And("^Add User Group \"([^\"]*)\"$")
+	public void UserGroupAdd(String grpName) throws InterruptedException {
+
+		String rname = "";
+
+		for (int i = 0; i < 2; i++) {
+			Random r = new Random();
+			char c = (char) (r.nextInt(26) + 'a');
+			rname = rname + String.valueOf(c);
+		}
+
+		td.setGrpNameGlobal(rname + "_" + grpName);
+
+		Automation.getElementByExpath("//*[@id=\"addGroupBtn_1\"]", 2000).click();
+
+		Automation.getElementByExpath("//*[@id=\"name\"]", 2000).sendKeys(td.getGrpNameGlobal());
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("addGroupButton", 2000));
+		Automation.getElementByID("addGroupButton", 2000).click();
+
+	}
+
+	@And("^Add Real Time Data Service \"([^\"]*)\" name$")
+	public void RealTimeDataServiceAdd(String srcvsName) throws InterruptedException {
+
+		Automation.getElementByExpath("//*[@id=\"addDataServiceBtn\"]", 2000).click();
+
+		Automation.getElementByLinkText(srcvsName, 200).click();
+
+		String buttonID = "editEventSaveBtn";
+
+		switch (srcvsName) {
+		case "XML Events Service":
+			buttonID = "addEventSubmitBtn";
+			Automation.getElementByID("host", 2000).sendKeys("198.168.3.156");
+			Automation.getElementByID("port", 2000).clear();
+			Automation.getElementByID("port", 2000).sendKeys("20456");
+			break;
+		case "Poll Service":
+			buttonID = "addEditPollSubmitBtn";
+			break;
+		case "Push Service":
+			buttonID = "addPushSubmitBtn";
+			Automation.getElementByID("clientHost", 2000).sendKeys("198.168.3.156");
+			Automation.getElementByID("port", 2000).clear();
+			Automation.getElementByID("port", 2000).sendKeys("20456");
+			break;
+		case "High Occupancy Alert Service":
+			Automation.getElementByID("host", 2000).sendKeys("198.168.3.156");
+			buttonID = "addStatSubmitBtn";
+			break;
+		case "Event Proxy Service":
+			buttonID = "editEventSaveBtn";
+			break;
+		case "TMDD Web Services":
+			buttonID = "addEventSubmitBtn";
+			break;
+		case "XML Diagnostics Service":
+			Automation.getElementByID("host", 2000).sendKeys("198.168.3.156");
+			Automation.getElementByID("port", 2000).clear();
+			Automation.getElementByID("port", 2000).sendKeys("20456");
+			buttonID = "addDiagSubmitBtn";
+			break;
+		case "XML Statistics Service":
+			Automation.getElementByID("host", 2000).sendKeys("198.168.3.156");
+			Automation.getElementByID("port", 2000).clear();
+			Automation.getElementByID("port", 2000).sendKeys("20456");
+			buttonID = "addStatSubmitBtn";
+			break;
+		}
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID(buttonID, 5000));
+
+		Automation.getElementByID(buttonID, 12000).click();
+
+		// verifications
+		switch (srcvsName) {
+		case "XML Statistics Service":
+			srcvsName = "XML Statistics";
+			break;
+		case "XML Events Service":
+			srcvsName = "XML Events";
+			break;
+		case "Poll Service":
+			srcvsName = "Poll";
+			break;
+		case "High Occupancy Alert Service":
+			srcvsName = "High Occupancy Alert";
+			break;
+		case "Event Proxy Service":
+			srcvsName = "Event";
+			break;
+		case "TMDD Web Services":
+			break;
+		case "XML Diagnostics Service":
+			srcvsName = "XML Diagnostics";
+			break;
+		case "Push Service":
+			srcvsName = "Push";
+			break;
+		}
+
+		Automation.getElementByLinkText(srcvsName, 100).click();
+
+	}
+
+	@And("^Add AP Group \"([^\"]*)\"$")
+	public void AccessPointGroupAdd(String grpName) throws InterruptedException {
+
+		td.setAPGrpNameGlobal(grpName + "_" + System.currentTimeMillis());
+
+		Automation.getElementByExpath("//*[@id=\"addApGroupBtn\"]", 2000).click();
+
+		Automation.getElementByExpath("//*[@id=\"apGroupName\"]", 2000).sendKeys(td.getAPGroupNameGlobal());
+
+		Automation.getElementByExpath("//*[@id=\"selectedAPs1\"]", 2000).click();
+
+		Automation.getElementByID("saveBtn", 2000).click();
+
+		String check = "\\";
+		if (td.getAPGroupNameGlobal().contains(check))
+			td.setAPGrpNameGlobal(td.getAPGroupNameGlobal().replace(check, ""));
+
+		Automation.getElementByLinkText(td.getAPGroupNameGlobal(), 200).click();
+
+		Automation.getElementByID("cancelBtn", 2000).click();
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 700).click();
+
+		Automation.selectFromDropdown("//*[@id=\"projectId\"]", td.getAPGroupNameGlobal(), true);
+
+	}
+
+	@And("^Add User \"([^\"]*)\" name \"([^\"]*)\" email$")
+	public void AddUser(String userName, String email) throws InterruptedException {
+
+		td.setUsrNameGlobal(userName + "_" + System.currentTimeMillis());
+
+		Automation.getElementByExpath("//*[@id=\"addUserBtn_1\"]", 2000).click();
+
+		Automation.getElementByExpath("//*[@id=\"username\"]", 2000).sendKeys(td.getUsrNameGlobal());
+
+		Automation.getElementByExpath("//*[@id=\"password1\"]", 2000).sendKeys(td.getUsrPasswordGlobal());
+
+		Automation.getElementByExpath("//*[@id=\"email\"]", 2000).sendKeys(email);
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("save", 2000));
+		Automation.getElementByID("save", 2000).click();
+
+	}
+
+	@And("^Change user group$")
+	public void UserGroupChange() throws InterruptedException {
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("newAddrBtn", 2000)); // scroll to page bottom
+		// *[@id="newAddrBtn"]
+
+		String userId = Automation.getElementByLinkText(td.getUsrNameGlobal(), 200).getAttribute("href");
+
+		// http://192.168.2.233/snaps/edituser.html?userId=8
+
+		int fIndex = userId.indexOf('=');
+
+		userId = userId.substring(fIndex + 1, userId.length());
+
+		Automation.getElementByExpath("//*[@id=\"" + userId + "\"]", 2000).click();
+		Automation.getElementByExpath("//*[@id=\"" + userId + "\"]", 2000).sendKeys(td.getGrpNameGlobal());
+
+	}
+
+	@And("^Add Access Point Group to User$")
+	public void UserAddAccessPointGroup() throws InterruptedException {
+
+		ExpandChildernFeatures("users and user groups");
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByID("newAddrBtn", 2000)); // scroll to page bottom
+
+		Automation.getElementByLinkText(td.getUsrNameGlobal(), 200).click();
+
+		Automation.getElementByExpath("//*[@id=\"ui-id-2\"]", 2000).click(); // access point groups tab
+		Automation.getElementByExpath("//*[@id=\"selectedAPGs1\"]", 2000).click(); // very first check box
+		Automation.getElementByID("save", 2000).click();
+	}
+
+	@And("^Expand Configuration Features Alerts$")
+	public void ExpandAlerts() throws InterruptedException {
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 200).click();
+		Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon bullhorn", 1, 200).click();// alerts
+
+	}
+
+	@And("^Delete All Alerts \"([^\"]*)\" by name$")
+	public void DeleteAllAlerts(String alName) throws InterruptedException {
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 200).click();
+		Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon bullhorn", 1, 200).click();// alerts
+
+		List<WebElement> oAlerts = Automation.getElementsByPartialLinkText(alName, 100);
+
+		int iSize = oAlerts.size();
+		if (iSize > 0) {
+
+			do {
+
+				oAlerts.get(0).click();
+
+				Thread.sleep(2000);
+				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+						driver.findElement(By.id("delete")));
+				Thread.sleep(2000);
+
+				Automation.getElementByID("delete", 2000).click();
+
+				oAlerts = Automation.getElementsByPartialLinkText(alName, 100);
+
+				iSize = oAlerts.size();
+
+			} while (iSize > 0);
+
+		}
+
+	}
+
+	@And("^Delete All AP Groups \"([^\"]*)\" by name$")
+	public void DeleteAllAPGroups(String alName) throws InterruptedException {
+
+		List<WebElement> oAlerts = Automation.getElementsByPartialLinkText(alName, 100);
+
+		int iSize = oAlerts.size();
+		if (iSize > 0) {
+
+			do {
+
+				oAlerts.get(0).click();
+
+				Thread.sleep(2000);
+
+				Automation.getElementByID("deleteButton", 2000).click();
+
+				Automation.getElementByExpath("/html/body/div[3]/div[3]/div/button[1]/span", 2000).click();
+
+				oAlerts = Automation.getElementsByPartialLinkText(alName, 100);
+
+				iSize = oAlerts.size();
+
+			} while (iSize > 0);
+
+		}
+
+	}
+
+	@And("^Delete All Sensor Group Zones \"([^\"]*)\" by name$")
+	public void DeleteAllSensorgroupzonesByName(String iName) throws InterruptedException {
+
+		List<WebElement> oINTER = Automation.getElementsByPartialLinkText(iName, 100);
+
+		int iSize = oINTER.size();
+		if (iSize > 0) {
+
+			do {
+
+				oINTER.get(0).click();
+
+				Thread.sleep(2000);
+
+				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+						Automation.getElementByID("delete", 2000));
+
+				Automation.getElementByID("delete", 4000).click();
+
+				Automation.getElementByExpath("/html/body/div[3]/div[3]/div/button[1]/span", 2000).click();
+
+				oINTER = Automation.getElementsByPartialLinkText(iName, 100);
+
+				iSize = oINTER.size();
+
+			} while (iSize > 0);
+
+		}
+
+	}
+
+	@And("^Delete All Intersections \"([^\"]*)\" by name$")
+	public void DeleteAllIntersections(String iName) throws InterruptedException {
+
+		List<WebElement> oINTER = Automation.getElementsByPartialLinkText(iName, 100);
+
+		int iSize = oINTER.size();
+		if (iSize > 0) {
+
+			do {
+
+				oINTER.get(0).click();
+
+				Thread.sleep(2000);
+
+				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+						Automation.getElementByID("deleteBtn", 2000));
+
+				Automation.getElementByID("deleteBtn", 4000).click();
+
+				Automation.getElementByExpath("/html/body/div[3]/div[3]/div/button[1]/span", 2000).click();
+
+				oINTER = Automation.getElementsByPartialLinkText(iName, 100);
+
+				iSize = oINTER.size();
+
+			} while (iSize > 0);
+
+		}
+
+	}
+
+	@And("^Delete Real Time Data Service \"([^\"]*)\" by name$")
+	public void DeleteRealTimeDataService(String srcvsName) throws InterruptedException {
+
+		String buttonID = "editEventSaveBtn";
+
+		switch (srcvsName) {
+		case "XML Statistics Service":
+			buttonID = "deleteXmlStatService";
+			srcvsName = "XML Statistics";
+			break;
+		case "XML Events Service":
+			buttonID = "deleteXmlEventService";
+			srcvsName = "XML Events";
+			break;
+		case "Poll Service":
+			buttonID = "deletePollService";
+			srcvsName = "Poll";
+			break;
+		case "High Occupancy Alert Service":
+			buttonID = "deleteHiOccService";
+			srcvsName = "High Occupancy Alert";
+			break;
+		case "Event Proxy Service":
+			buttonID = "deleteEventProxyService";
+			srcvsName = "Event";
+			break;
+		case "TMDD Web Services":
+			buttonID = "deletetmddservice";
+			break;
+		case "XML Diagnostics Service":
+			buttonID = "deleteXmlDiagService";
+			srcvsName = "XML Diagnostics";
+			break;
+		case "Push Service":
+			buttonID = "deletePushService";
+			srcvsName = "Push";
+			break;
+		}
+
+		List<WebElement> oINTER = Automation.getElementsByLinkText(srcvsName, 100);
+
+		int iSize = oINTER.size();
+		if (iSize > 0) {
+
+			do {
+
+				oINTER.get(0).click();
+
+				Thread.sleep(2000);
+
+				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+						Automation.getElementByID(buttonID, 2000));
+
+				Automation.getElementByID(buttonID, 4000).click();
+
+				Automation.getElementByExpath("/html/body/div[3]/div[3]/div/button[1]/span", 2000).click();
+
+				oINTER = Automation.getElementsByLinkText(srcvsName, 100);
+
+				iSize = oINTER.size();
+
+			} while (iSize > 0);
+
+		}
+
+	}
+
+	@And("^Delete Alert$")
+	public void DeleteAlert(int num) throws InterruptedException {
+
+		String allertName = "";
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 200).click();
+		Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon bullhorn", 1, 200).click();// alerts
+
+		Automation.getElementByLinkText(allertName, 2000).click();
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				driver.findElement(By.id("delete")));
+		Thread.sleep(2000);
+
+		Automation.getElementByID("delete", 2000).click();
+
+		Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon bullhorn", 1, 200).click();// alerts
+		Thread.sleep(2000);
+
+		List<WebElement> oAlerts = driver.findElements(By.linkText(allertName));
+
+		int iSize = oAlerts.size();
+		if (iSize > 0) {
+			throw new InterruptedException();
+		}
+
+	}
+
+	@And("^Add Alert \"([^\"]*)\" Standard Configuartion \"([^\"]*)\" Yes/No (\\d+) How Many \"([^\"]*)\" Devices \"([^\"]*)\"$")
+	public void AddAlert(String Name, String standardConfiguration, int num, String Devices, String SelectAll)
+			throws InterruptedException {
+
+		String allert = "";
+
+		String aname = "";
+
+		for (int i = 0; i < 3; i++) {
+			Random r = new Random();
+			char c = (char) (r.nextInt(26) + 'a');
+			aname = aname + String.valueOf(c);
+		}
+
+		if (Name.equalsIgnoreCase(""))
+			Name = "AL_";
+		for (int i = 0; i < num; i++)
+			td.setAlertNameGlobal(Name + "-" + aname + i);
+		// allertName.add(Name + "-"+aname + i);
+
+		for (int i = 0; i < num; i++) {
+
+			Automation.FindByTagNameAndAttributeIndexed("div", "title", "SNAPS Dashboard", 0, 200).click();
+			Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon bullhorn", 1, 200).click();// alerts
+
+			if (standardConfiguration.equalsIgnoreCase("Yes")) {
+				allert = td.getAlertNameGlobal(i) + "_ST";
+
+			}
+
+			else {
+				allert = td.getAlertNameGlobal(i) + "_CUST";
+			}
+
+			Thread.sleep(2000);
+			Automation.getElementByID("addParkingLot", 2000).click();
+			Automation.getElementByID("alertName", 2000).sendKeys(allert);
+			if (standardConfiguration.equalsIgnoreCase("Yes"))
+
+			{
+				Automation
+						.getElementByExpath(
+								"//*[@id=\"alertCommand\"]/div[1]/div[2]/div[1]/div[1]/fieldset[3]/div/label[1]", 2000)
+						.click();
+				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+						driver.findElement(By.id("save")));
+			} else {
+				Automation.getElementByName("snapsServers", 2000).click();
+				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+						driver.findElement(By.id("save")));
+				Thread.sleep(2000);
+				Automation.getElementByExpath("//*[@id=\"snapsServerTriggers\"]/tbody/tr[1]/td[1]/div/label", 2000)
+						.click();
+			}
+			Thread.sleep(2000);
+			Automation.getElementByID("save", 2000).click();
+
+			if (Devices.isEmpty() == false) {
+
+				String devicesAll = Devices;
+				String[] device = devicesAll.split(";");
+
+				for (int y = 0; y < device.length; y++) {
+
+					this.DevcesTabsSelect(device[y].toString(), allert);
+
+					if (device[y].toString().equals("Sensor Zones")) {
+						if (SelectAll.isEmpty() == false)
+							this.SelectAllDevices();
+					}
+
+					else if (device[y].toString().equals("Intersections")) {
+						this.IntersectionsAdd();
+					}
+
+					else if (device[y].toString().equals("Congestion Segments")) {
+						this.CongestionSegmentAdd();
+
+					}
+
+				}
+
+			}
+
+		}
+
+		// Verify Alert
+		Automation.FindByTagNameAndAttributeIndexed("div", "class", "textAndIcon bullhorn", 1, 2000).click();// alerts
+		driver.findElement(By.linkText(allert));
+	}
+	// Delete
+
+	@Then("^Get text that displays when node is opened$")
+	public void GetTextSNAPS() throws InterruptedException {
+		try {
+			Thread.sleep(700);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		getSearch0 = Automation.FindByTagNameAndAttributeIndexed("div", "class", "toggle faq faq-SNAPS", 0, 200)
+				.getText();
+
+		getSearch1 = driver.findElement(By.xpath("//*[@id='troubleshooting']/div[3]/div/div[2]/ul/li")).getText();
+
+	}
+
+	@Then("^Get text when search results page opened (\\d+)$")
+	public void GetSearchResultsTextSNAPS(int searchn) {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (searchn == 0) {
+			getSearch2 = driver.findElement(By.xpath("//*[@id='searchresults']/p")).getText();
+
+			getSearch3 = driver.findElement(By.xpath("//*[@id='searchresults']/a")).getText();
+
+			getSearch3 = getSearch3.substring(0, 41);
+
+			getSearch2 = getSearch2.substring(0, 14);
+
+			getSearch4 = driver.findElement(By.xpath("//*[@id='searchresults']/a/div")).getText();
+		} else {
+			getSearch2 = driver.findElement(By.xpath("//*[@id='searchresults']/p")).getText();
+
+			getSearch2 = getSearch2.substring(0, 14);
+
+			getSearch5 = driver.findElement(By.xpath("//*[@id='searchresults']/a[1]/h4")).getText();
+
+			getSearch6 = driver.findElement(By.xpath("//*[@id='searchresults']/a[1]/div")).getText();
+
+			getSearch7 = driver.findElement(By.xpath("//*[@id='searchresults']/a[2]/h4")).getText();
+
+			getSearch8 = driver.findElement(By.xpath("//*[@id='searchresults']/a[2]/div")).getText();
+
+		}
+	}
+
+	@Then("^Assert that displayed text is expected text (\\d+) and \"([^\"]*)\"$")
+	public void AssertDisplayedTextSNAPS(int textnum, String stext) throws InterruptedException {
+		try {
+			Thread.sleep(700);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String searchn = "";
+
+		if (textnum == 0) {
+			searchn = getSearch0;
+		} else if (textnum == 1) {
+			searchn = getSearch1;
+
+		} else if (textnum == 2) {
+			searchn = getSearch2;
+
+		} else if (textnum == 3) {
+			searchn = getSearch3;
+
+		} else if (textnum == 4) {
+			searchn = getSearch4;
+		} else if (textnum == 5) {
+			searchn = getSearch5;
+		} else if (textnum == 6) {
+			searchn = getSearch6;
+		} else if (textnum == 7) {
+			searchn = getSearch7;
+		} else if (textnum == 8) {
+			searchn = getSearch8;
+
+		}
+
+		String assertionError = null;
+		try {
+			Assert.assertEquals(searchn, stext, "incorrect validation -" + searchn);
+		} catch (AssertionError ae) {
+			assertionError = ae.toString();
+			System.out.println(assertionError);
+			Assert.assertEquals(1, 3, ""); // this is to force cucumber fail scenario
+		}
+
+	}
+
+	@Then("^Click magnifying glass icon in top right to open search bar$")
+	public void SnapsSearchSNAPS() {
+
+		try {
+			Thread.sleep(7000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		driver.findElement(By.className("icon-line-cross")).click();
+
+		System.out.println("Clicked on Search");
+
+	}
+
+	@Then("^In the search bar enter text \"([^\"]*)\" then submit$")
+	public void EnterSearchTextSNAPS(String stext) throws InterruptedException {
+
+		try {
+			Thread.sleep(7000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		Automation.FindByTagNameAndAttributeIndexed("input", "name", "search", 0, 200).sendKeys(stext);
+		Automation.FindByTagNameAndAttributeIndexed("input", "src",
+				"http://sensysnetworks.com/images/icons/custom_search_btn.png", 0, 200).click();
+
+		System.out.println("Search text: " + stext);
+
+	}
+
+	@Then("^Click to expand node with text \"([^\"]*)\"$")
+	public void expandLogonSNAPS(String stext) throws InterruptedException {
+
+		try {
+			Thread.sleep(7000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				driver.findElement(By.id("support-contactform-submit")));
+
+		System.out.println("Scroll down to find element on page...");
+
+		try {
+			Thread.sleep(7000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		Automation.FindByTagNameAndAttributeIndexed("i", "class", "acc-closed icon-question-sign", 4, 200).click();
+
+		System.out.println("Clicked on: " + stext);
+
+	}
+
+	@Then("^Google Search for \"([^\"]*)\" and validate as \"([^\"]*)\"$")
+	public void SearchGoogleFor(String forstr, String validate) {
+		// driver.manage().window().maximize();
+
+		System.out.println("Search for: " + forstr);
+
+		driver.navigate().to("http://www.google.com");
+
+		driver.findElement(By.id("lst-ib")).sendKeys(forstr);
+
+		driver.findElement(By.name("btnK")).click();
+
+		String getSearch = driver.findElement(By.id("lst-ib")).getAttribute("value");
+
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Assert.assertEquals(getSearch, validate, "incorrect search -" + getSearch);
+
+		try {
+			Thread.sleep(7000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String getResults = driver.findElement(By.id("resultStats")).getText();
+
+		System.out.println(getResults);
+
+		// List and print search results
+		List<WebElement> alllinks = driver.findElements(By.tagName("a"));
+		String str;
+		for (int i = 0; i < alllinks.size(); i++) {
+			str = alllinks.get(i).getText();
+			int found = str.indexOf(forstr, 0);
+			if (found != -1) {
+				System.out.println(str);
+
+			}
+		}
+		/*
+		 * for (int i = 0; i < alllinks.size(); i++) { alllinks.get(i).click();
+		 * driver.navigate().back(); }
+		 */
+
+		// *[@id="lst-ib"]
+
+	}
+
+	@Then("^Google Search$")
+	public void SearchGoogle() {
+		// driver.manage().window().maximize();
+
+		driver.navigate().to("http://www.google.com");
+
+		int i;
+		String lastSearch = null;
+		for (i = 0; i < 3; i++) {
+			driver.findElement(By.id("lst-ib")).sendKeys("196" + String.valueOf(i));
+			try {
+				Thread.sleep(500);
+				// driver.wait(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			driver.findElement(By.id("lst-ib")).clear();
+			lastSearch = "196" + String.valueOf(i);
+
+		}
+		driver.findElement(By.id("lst-ib")).sendKeys(lastSearch);
+
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		driver.findElement(By.name("btnK")).click();
+
+		String getSearch = driver.findElement(By.id("lst-ib")).getAttribute("value");
+
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Assert.assertEquals(getSearch, lastSearch, "incorrect search -" + getSearch);
+
+		// *[@id="lst-ib"]
+
+	}
+
+	@Then("^Run warmup test$")
+	public void WarmUpTest() {
+		// driver.manage().window().maximize();
+		driver.navigate().to("http://www.stihi.ru");
+
+		// driver.navigate().to("http://www.google.com");
+		driver.findElement(By.name("string")).sendKeys("дима ирин");
+		driver.findElement(By.className("head-search_submit")).click();
+		driver.findElement(By.xpath("//a[@href='/avtor/palermomorning']")).click();
+
+		driver.navigate().to("http://www.google.com");
+
+		int i;
+		String lastSearch = null;
+		for (i = 0; i < 3; i++) {
+			driver.findElement(By.id("lst-ib")).sendKeys("196" + String.valueOf(i));
+			// driver.wait(500);
+			driver.findElement(By.id("lst-ib")).clear();
+			lastSearch = "196" + String.valueOf(i);
+
+		}
+		driver.findElement(By.id("lst-ib")).sendKeys(lastSearch);
+
+		driver.findElement(By.name("btnK")).click();
+
+	}
+
+	@When("^Active page is \"([^\"]*)\"$")
+	public void OpenBrowserToSNAPS(String urlname) {
+
+		driver.navigate().to(urlname);
+	}
+
+	@When("^Safari is on \"([^\"]*)\"$")
+	public void SafariNavigateTo(String urlname) {
+		driver.navigate().to(urlname);
+	}
+
+	@And("^Quit Browser$")
+	public void DriverQuit() {
+		driver.quit();
+
+	}
+
+	/**
+	 * This method captures the GroupName, TestID and TestDescription details of
+	 * each testcase under execution
+	 * 
+	 * @param scenario
+	 */
+	private void updateTestDetails(Scenario scenario) {
+		String featureScenario = scenario.getName();
+
+		/*
+		 * for(String tag : scenario.getSourceTagNames()){ groupName = groupName + " " +
+		 * tag.substring(0); System.out.println("Tag: " + tag); } if
+		 * (featureScenario.contains("<") && featureScenario.contains(">")){ this.testID
+		 * = featureScenario.substring( featureScenario.indexOf("<") + 1,
+		 * featureScenario.indexOf(">")); this.testDescription =
+		 * featureScenario.substring(0, featureScenario.indexOf("<")); }//starting
+		 * //from index 1 to skip @ sign of tags }
+		 */
+
+		System.out.println("Complete Scenario is :-" + featureScenario);
+		System.out.println("Test Description is:- " + this.testDescription);
+		System.out.println("Group Name is:- " + this.groupName);
+
+		System.out.println(
+				"============================================================================================");
+	}
+
+	public void CongestionSegmentAdd() throws InterruptedException {
+
+		List<WebElement> butSelectAll = Automation.getElementsByName("congSegments", 2000);
+		int icSize = butSelectAll.size();
+
+		for (int i = 0; i < icSize; i++)
+			Automation.getElementByID(butSelectAll.get(i).getAttribute("id"), 2000).click();
+
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",
+				Automation.getElementByExpath("//*[@id=\"alertCommand\"]/div[2]/div[1]", 2000));
+
+		Automation.getElementByExpath("//*[@id=\"congSegmentTriggers\"]/tbody/tr/td[1]/div/label/span", 2000).click(); // select
+		// trigger
+		Automation.getElementByExpath("//*[@id=\"ui-id-11\"]", 2000).click(); // tab in triggers congestion segments
+
+		Automation.getElementByExpath("//*[@id=\"congSegmentTriggers\"]/tbody/tr/td[2]/select", 20).click();
+
+		Automation.getElementByExpath("//*[@id=\"congSegmentTriggers\"]/tbody/tr/td[2]/select", 20).sendKeys("ORANGE");
+
+		Automation.getElementByExpath("//*[@id=\"CONGESTIONUP_TRIGGER_TIME\"]", 2000).sendKeys("5"); // UP DELAY
+
+		Automation.getElementByExpath("//*[@id=\"CONGESTIONDOWN_TRIGGER_TIME\"]", 2000).sendKeys("5"); // DOWN DELAY
+
+		// Automation.getElementByExpath("//*[@id=\"CONGESTIONCALC_WINDOW\"]",
+		// 2000).sendKeys("10"); // CAL WINDOW
+
+		Automation.getElementByID("save", 200).click(); // Save
+
+	}
+}
